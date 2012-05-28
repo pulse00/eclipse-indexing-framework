@@ -12,13 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopScoreDocCollector;
 import org.eclipse.core.runtime.IPath;
 
 import com.dubture.indexing.core.index.DocumentManager;
+import com.dubture.indexing.core.index.IResultHandler;
 import com.dubture.indexing.core.index.ReferenceInfo;
 
 /**
@@ -51,24 +48,20 @@ public class SearchEngine
     
     public List<ReferenceInfo> findReferences(IPath path) throws Exception
     {
-        List<ReferenceInfo> references = new ArrayList<ReferenceInfo>();
-        int hitsPerPage = 10;
-    
-        IndexReader reader = manager.getReader();
-        IndexSearcher searcher = new IndexSearcher(reader);
-        TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage, true);
-        searcher.search(manager.getPathQuery(path), collector);
-        ScoreDoc[] hits = collector.topDocs().scoreDocs;        
+        final List<ReferenceInfo> references = new ArrayList<ReferenceInfo>();
         
-        for(int i=0;i<hits.length;++i) {
-            int docId = hits[i].doc;
-            Document d = searcher.doc(docId);
-            ReferenceInfo info = new ReferenceInfo();
-            info.setName(d.get("name"));
-            references.add(info);
-        }
+        manager.search(manager.getPathQuery(path), new IResultHandler()
+        {
+            
+            @Override
+            public void handle(Document document)
+            {
+                ReferenceInfo info = new ReferenceInfo();
+                info.setName(document.get("name"));
+                references.add(info);
+            }
+        });
         
-        System.err.println(" NUM DOCS " + reader.numDocs());
         return references;
     }
 }

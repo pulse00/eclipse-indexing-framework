@@ -10,6 +10,8 @@ package com.dubture.indexing.core.index;
 
 import org.eclipse.core.resources.IFile;
 
+import com.dubture.indexing.core.IndexingCorePlugin;
+
 /**
  * 
  * An IndexingRequestor which uses lucene.
@@ -30,7 +32,7 @@ public class LuceneIndexingRequestor implements IIndexingRequestor
             manager = DocumentManager.getInstance();
             manager.deleteReferences(file);
         } catch (Exception e) {
-            e.printStackTrace();
+            IndexingCorePlugin.logException(e);
         }
     }
 
@@ -40,7 +42,7 @@ public class LuceneIndexingRequestor implements IIndexingRequestor
         try {
             manager.addReference(file, reference);
         } catch (Exception e) {
-            e.printStackTrace();
+            IndexingCorePlugin.logException(e);
         }
     }
 
@@ -50,7 +52,7 @@ public class LuceneIndexingRequestor implements IIndexingRequestor
         try {
             manager.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            IndexingCorePlugin.logException(e);
         }
     }    
 }

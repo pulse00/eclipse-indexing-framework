@@ -16,6 +16,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -33,15 +34,11 @@ import com.dubture.indexing.core.index.DocumentManager;
  */
 public class IndexingCorePlugin extends Plugin {
 
+	public static IndexingCorePlugin plugin;
 	
+	public static final String ID = "com.dubture.index.core";
 
-    private static BundleContext context;
-	
-	public IndexingCorePlugin plugin;
-
-	static BundleContext getContext() {
-		return context;
-	}
+    private static final String DEBUG = "com.dubture.indexing.core/debug";
 
 	/*
 	 * (non-Javadoc)
@@ -49,8 +46,8 @@ public class IndexingCorePlugin extends Plugin {
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 	    
+	    super.start(bundleContext);
 	    plugin = this;
-		IndexingCorePlugin.context = bundleContext;
 		
 		Job job = new Job("Setting up lucene builders...")
         {
@@ -70,8 +67,40 @@ public class IndexingCorePlugin extends Plugin {
         job.schedule();
 	}
 	
-	private void setupBuilders() throws CoreException
+    /*
+	 * (non-Javadoc)
+	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
+	 */
+	public void stop(BundleContext bundleContext) throws Exception {
+	    
+	    super.stop(bundleContext);
+	    
+	    DocumentManager.getInstance().shutdown();
+		plugin = null;
+	}
+	
+	public static IndexingCorePlugin getDefault()
 	{
+	    return plugin;
+	}
+	
+	public static void debug(String message)
+	{
+	    String debugOption = Platform.getDebugOption(DEBUG);
+	    
+	    if (plugin.isDebugging() && "true".equalsIgnoreCase(debugOption)) {
+	        plugin.getLog().log(new Status(Status.INFO, ID, message));
+	    }
+	}
+	
+	public static void logException(Exception e) 
+	{
+	    IStatus status = new Status(Status.ERROR, IndexingCorePlugin.ID, e.getMessage(), e); 
+	    plugin.getLog().log(status);
+	}
+	
+    private void setupBuilders() throws CoreException
+    {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         ExtensionManager manager = ExtensionManager.getInstance();
         
@@ -86,16 +115,5 @@ public class IndexingCorePlugin extends Plugin {
                 }
             }
         }
-	}
-
-    /*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext bundleContext) throws Exception {
-	    
-	    DocumentManager.getInstance().shutdown();
-		IndexingCorePlugin.context = null;
-		plugin = null;
-	}
+    }
 }
