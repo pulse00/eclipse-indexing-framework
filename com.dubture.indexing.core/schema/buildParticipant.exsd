@@ -56,6 +56,23 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="file_extensions" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="xml_visitor" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":com.dubture.indexing.core.index.XmlIndexingVisitor"/>
+               </appinfo>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

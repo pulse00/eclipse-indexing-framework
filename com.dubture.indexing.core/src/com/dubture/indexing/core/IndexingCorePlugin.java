@@ -8,23 +8,20 @@
  ******************************************************************************/
 package com.dubture.indexing.core;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.osgi.framework.BundleContext;
+
+import com.dubture.indexing.core.build.BuildParticipant;
 
 /**
  * Core Plugin. Adds the IndexingBuilder to project which implement the buildParticipant
@@ -35,8 +32,6 @@ import org.osgi.framework.BundleContext;
  */
 public class IndexingCorePlugin extends Plugin {
 
-	private static final String BUILD_PARTICIPANT = "com.dubture.indexing.core.buildParticipant";
-	private static final String BUILDER_ID = "com.dubture.indexing.core.indexingBuilder";
 	
 
     private static BundleContext context;
@@ -77,54 +72,20 @@ public class IndexingCorePlugin extends Plugin {
 	private void setupBuilders() throws CoreException
 	{
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        ExtensionManager manager = ExtensionManager.getInstance();
         
-        IConfigurationElement[] config = Platform.getExtensionRegistry()
-                .getConfigurationElementsFor(BUILD_PARTICIPANT);        
-
-        List<String> natures = new ArrayList<String>();
-        
-        try {                           
-            
-            for (IConfigurationElement element : config) {
-                String nature = element.getAttribute("nature_id");
-                if (nature != null) {
-                    natures.add(nature);
-                }
-            }
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
+        List<BuildParticipant> participants = manager.getBuildParticipants();
         
         for (IProject project : workspace.getRoot().getProjects()) {
-            for (String nature : natures) {
-                if (project.hasNature(nature)) {
-                    try {
-                        addBuilder(project);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+            for (BuildParticipant participant : participants) {
+                try {
+                    participant.addBuilder(project);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
 	}
-
-	private void addBuilder(IProject project) throws CoreException
-    {
-	    IProjectDescription desc = project.getDescription();
-	      ICommand[] commands = desc.getBuildSpec();
-	      for (int i = 0; i < commands.length; ++i)
-	         if (commands[i].getBuilderName().equals(BUILDER_ID))
-	            return;
-	      //add builder to project
-	      ICommand command = desc.newCommand();
-	      command.setBuilderName(BUILDER_ID);
-	      ICommand[] nc = new ICommand[commands.length + 1];
-	      // Add it before other builders.
-	      System.arraycopy(commands, 0, nc, 1, commands.length);
-	      nc[0] = command;
-	      desc.setBuildSpec(nc);
-	      project.setDescription(desc, null);	    
-    }
 
     /*
 	 * (non-Javadoc)
