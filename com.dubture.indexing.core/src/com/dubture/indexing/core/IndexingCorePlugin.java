@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.osgi.framework.BundleContext;
 
 import com.dubture.indexing.core.build.BuildParticipant;
+import com.dubture.indexing.core.index.DocumentManager;
 
 /**
  * Core Plugin. Adds the IndexingBuilder to project which implement the buildParticipant
@@ -92,6 +93,8 @@ public class IndexingCorePlugin extends Plugin {
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
+	    
+	    DocumentManager.getInstance().shutdown();
 		IndexingCorePlugin.context = null;
 		plugin = null;
 	}

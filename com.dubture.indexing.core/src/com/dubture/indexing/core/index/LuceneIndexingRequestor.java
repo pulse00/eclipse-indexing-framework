@@ -28,7 +28,7 @@ public class LuceneIndexingRequestor implements IIndexingRequestor
         try {
             this.file = file;
             manager = DocumentManager.getInstance();
-            manager.deleteByPath(file.getFullPath());
+            manager.deleteReferences(file);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,7 +43,6 @@ public class LuceneIndexingRequestor implements IIndexingRequestor
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void flush()
