@@ -11,10 +11,12 @@ package com.dubture.indexing.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 
 import com.dubture.indexing.core.build.BuildParticipant;
+import com.dubture.indexing.core.index.JsonIndexingVisitor;
 import com.dubture.indexing.core.index.XmlIndexingVisitor;
 
 /**
@@ -34,6 +36,16 @@ public class ExtensionManager
         initBuildParticipants();
     }
     
+    private Object getExtension(IConfigurationElement element, String name)
+    {
+        try {
+            return element.createExecutableExtension(name);
+        } catch (CoreException e) {
+        }
+        
+        return null;
+    }
+    
     private void initBuildParticipants()
     {
         participants = new ArrayList<BuildParticipant>();
@@ -46,7 +58,8 @@ public class ExtensionManager
                 String nature = element.getAttribute("nature_id");
                 String extensions = element.getAttribute("file_extensions");
                 
-                XmlIndexingVisitor xmlVisitor = (XmlIndexingVisitor) element.createExecutableExtension("xml_visitor");
+                XmlIndexingVisitor xmlVisitor = (XmlIndexingVisitor) getExtension(element, "xml_visitor");
+                JsonIndexingVisitor jsonVisitor = (JsonIndexingVisitor) getExtension(element, "json_visitor");
                 
                 if (nature != null) {
                     
@@ -59,20 +72,25 @@ public class ExtensionManager
                         }
                     }
                     
-                    if (add) {
-                        
-                        BuildParticipant participant = new BuildParticipant(nature, extensions);
-                        
-                        if (xmlVisitor != null) {
-                            participant.setXmlVisitor(xmlVisitor);
-                        }
-                        
-                        participants.add(participant);
+                    if (add == false) {
+                        continue;
                     }
+                        
+                    BuildParticipant participant = new BuildParticipant(nature, extensions);
+                    
+                    if (xmlVisitor != null) {
+                        participant.setXmlVisitor(xmlVisitor);
+                    }
+                    
+                    if (jsonVisitor != null) {
+                        participant.setJsonVisitor(jsonVisitor);
+                    }
+                    
+                    participants.add(participant);
                 }
             }
         } catch (Exception e1) {
-            e1.printStackTrace();
+            IndexingCorePlugin.logException(e1);
         }
         
     }
@@ -90,5 +108,4 @@ public class ExtensionManager
     {
         return participants;
     }
-
 }

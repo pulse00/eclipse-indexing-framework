@@ -8,16 +8,22 @@
  ******************************************************************************/
 package com.dubture.indexing.core.index;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 
-
-public abstract class AbstractIndexingVisitor implements XmlIndexingVisitor
+/**
+ * Base class for IndexingVisitors.
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
+public abstract class AbstractIndexingVisitor implements IndexingVisitor
 {
     protected IIndexingRequestor requestor;
     protected IResource resource;
     
     @Override
-    public XmlIndexingVisitor setRequestor(IIndexingRequestor requestor)
+    public IndexingVisitor setRequestor(IIndexingRequestor requestor)
     {
         this.requestor = requestor;
         return this;
@@ -29,9 +35,15 @@ public abstract class AbstractIndexingVisitor implements XmlIndexingVisitor
         return resource;
     }
     
-    public XmlIndexingVisitor setResource(IResource resource)
+    public IndexingVisitor setResource(IResource resource)
     {
         this.resource = resource;
         return this;
+    }
+    
+    @Override
+    public void visit(IFile file)
+    {
+        
     }
 }

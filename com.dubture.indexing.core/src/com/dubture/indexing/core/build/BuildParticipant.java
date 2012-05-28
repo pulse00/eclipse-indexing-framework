@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 
+import com.dubture.indexing.core.index.JsonIndexingVisitor;
 import com.dubture.indexing.core.index.XmlIndexingVisitor;
 
 /**
@@ -35,6 +36,7 @@ public class BuildParticipant
     private String natureId;
     private List<String> extensions;
     private XmlIndexingVisitor xmlVisitor;
+    private JsonIndexingVisitor jsonVisitor;
     
     
     /**
@@ -123,5 +125,20 @@ public class BuildParticipant
     public XmlIndexingVisitor getXmlVisitor()
     {
         return xmlVisitor;
+    }
+
+    public boolean hasJsonVisitor()
+    {
+        return jsonVisitor != null;
+    }
+    
+    public JsonIndexingVisitor getJsonVisitor()
+    {
+        return jsonVisitor;
+    }
+
+    public void setJsonVisitor(JsonIndexingVisitor jsonVisitor)
+    {
+        this.jsonVisitor = jsonVisitor;
     }
 }

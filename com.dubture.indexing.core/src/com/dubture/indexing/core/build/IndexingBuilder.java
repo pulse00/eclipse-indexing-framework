@@ -9,6 +9,7 @@
 package com.dubture.indexing.core.build;
 
 import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -23,8 +24,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.w3c.dom.Document;
 
 import com.dubture.indexing.core.ExtensionManager;
+import com.dubture.indexing.core.index.JsonIndexingVisitor;
 import com.dubture.indexing.core.index.LuceneIndexingRequestor;
+import com.dubture.indexing.core.index.XmlIndexingVisitor;
 import com.dubture.indexing.core.xml.PositionalXMLReader;
+import com.google.gson.FieldNamingStrategy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class IndexingBuilder extends IncrementalProjectBuilder
 {
@@ -69,19 +75,28 @@ public class IndexingBuilder extends IncrementalProjectBuilder
     {
         for (BuildParticipant builder : ExtensionManager.getInstance().getBuildParticipants()) {
             
+            LuceneIndexingRequestor requestor = new LuceneIndexingRequestor(file);
+            
             if ("xml".equals(file.getFileExtension()) && builder.hasXmlVisitor()) {
                 
                 FileInputStream fis = new FileInputStream(file.getLocation().toFile());
                 Document doc = PositionalXMLReader.readXML(fis);
-                LuceneIndexingRequestor requestor = new LuceneIndexingRequestor(file);
+                XmlIndexingVisitor visitor = builder.getXmlVisitor();
+                visitor.setRequestor(requestor).setResource(file);
+                visitor.visit(doc);
                 
-                builder.getXmlVisitor()
-                    .setRequestor(requestor)
-                    .setResource(file)
-                    .visit(doc);
+            } else if ("json".equals(file.getFileExtension()) && builder.hasJsonVisitor()) {
                 
-                requestor.flush();
+                JsonIndexingVisitor visitor = builder.getJsonVisitor();
+                visitor.setRequestor(requestor);
+                FieldNamingStrategy strategy = visitor.getFieldNamingStrategy();
+                Gson gson = new GsonBuilder().setFieldNamingStrategy(strategy).create();
+                InputStreamReader reader = new InputStreamReader(file.getContents());
+                Object object = gson.fromJson(reader, visitor.getTransformerClass());
+                visitor.visit(object);
             }
+            
+            requestor.flush();
         }
     }
     

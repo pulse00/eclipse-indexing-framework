@@ -32,8 +32,7 @@ import com.dubture.indexing.core.IndexingCorePlugin;
 
 /**
  * 
- * Main class for indexing lucene documents.
- * 
+ * Main class for indexing and searching lucene documents.
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *

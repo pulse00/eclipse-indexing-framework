@@ -8,15 +8,24 @@
  ******************************************************************************/
 package com.dubture.indexing.core.index;
 
-import org.w3c.dom.Document;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 
 /**
- * 
+ * IndexingVisitor interface for buildParticipant extension implementation. 
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-public interface XmlIndexingVisitor extends IndexingVisitor
+public interface IndexingVisitor
 {
-    void visit(Document doc);
+    
+    IndexingVisitor setRequestor(IIndexingRequestor requestor);
+    
+    IResource getResource();
+    
+    IndexingVisitor setResource(IResource resource);
+    
+    void visit(IFile file);
+
 }

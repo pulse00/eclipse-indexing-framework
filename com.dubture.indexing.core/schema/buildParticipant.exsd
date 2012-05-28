@@ -73,6 +73,16 @@
                </appinfo>
             </annotation>
          </attribute>
+         <attribute name="json_visitor" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":com.dubture.indexing.core.index.JsonIndexingVisitor"/>
+               </appinfo>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
