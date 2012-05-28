@@ -12,10 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.search.Query;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 
 import com.dubture.indexing.core.index.DocumentManager;
 import com.dubture.indexing.core.index.IResultHandler;
+import com.dubture.indexing.core.index.QueryBuilder;
 import com.dubture.indexing.core.index.ReferenceInfo;
 
 /**
@@ -31,10 +34,10 @@ public class SearchEngine
     
     private DocumentManager manager;
     
-    
     private SearchEngine() throws Exception
     {
         manager = DocumentManager.getInstance();
+        new QueryBuilder();
     }
     
     public static SearchEngine getInstance() throws Exception
@@ -48,9 +51,19 @@ public class SearchEngine
     
     public List<ReferenceInfo> findReferences(IPath path) throws Exception
     {
+        return findByQuery(QueryBuilder.createPathQuery(path));
+    }
+    
+    public List<ReferenceInfo> findReferences(IFile file) throws Exception
+    {
+        return findByQuery(QueryBuilder.createFileQuery(file));
+    }
+    
+    protected List<ReferenceInfo> findByQuery(Query query)
+    {
         final List<ReferenceInfo> references = new ArrayList<ReferenceInfo>();
         
-        manager.search(manager.getPathQuery(path), new IResultHandler()
+        manager.search(query, new IResultHandler()
         {
             
             @Override

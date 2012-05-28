@@ -19,19 +19,14 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriter.MaxFieldLength;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
 
 import com.dubture.indexing.core.IndexingCorePlugin;
 
@@ -90,26 +85,12 @@ public class DocumentManager
 
     public void deleteReferences(IFile file) throws Exception
     {
-        BooleanQuery boolQuery = new BooleanQuery();
-
-        String path = file.getFullPath().removeLastSegments(1).toString();
-        boolQuery.add(new TermQuery(new Term("path", path)), 
-                BooleanClause.Occur.MUST
-        );
+        Query query = QueryBuilder.createDeleteReferencesQuery(file);
         
-        boolQuery.add(new TermQuery( new Term("filename", file.getName())),
-                BooleanClause.Occur.MUST
-        );
-        
-        boolQuery.add(new TermQuery(new Term(IndexField.TYPE, IndexField.REFERENCE)), 
-                BooleanClause.Occur.MUST
-        );
-        
-        writer.deleteDocuments(boolQuery);
+        writer.deleteDocuments(query);
         writer.commit();
         
         updateReader();
-        
     }
     
     protected void updateReader()
@@ -129,25 +110,20 @@ public class DocumentManager
         }
     }
     
-    public Query getPathQuery(IPath path)
-    {
-        IndexingCorePlugin.debug("Getting query path for " + path.toString());
-        TermQuery query = new TermQuery(new Term("path", path.toString()));
-        return query;
-    }
-    
-    public IndexWriter getWriter()
-    {
-        return writer;
-    }
-
     public void addReference(IFile file, ReferenceInfo reference) throws Exception
     {
         pendingReferences.put(file, reference);
     }
 
-    @SuppressWarnings("rawtypes")
     public void flush() throws Exception
+    {
+        flushReferences();
+        writer.commit();
+        updateReader();
+    }
+    
+    @SuppressWarnings("rawtypes")
+    protected void flushReferences() throws Exception
     {
         Iterator it = pendingReferences.keySet().iterator();
         
@@ -155,41 +131,26 @@ public class DocumentManager
             
             IFile file = (IFile) it.next();
             ReferenceInfo ref = pendingReferences.get(file);
-            
-            Document doc = new Document();
-
-            String path = file.getFullPath().removeLastSegments(1).toString();
-            
-            doc.add(new Field(IndexField.PATH, path, Field.Store.YES, Field.Index.NOT_ANALYZED));
-            doc.add(new Field(IndexField.FILENAME, file.getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-            doc.add(new Field(IndexField.REFERENCENAME, ref.name, Field.Store.YES, Field.Index.NOT_ANALYZED));
-            doc.add(new Field(IndexField.TYPE, IndexField.REFERENCE, Field.Store.YES, Field.Index.NOT_ANALYZED));
-            
-            IndexingCorePlugin.debug("Indexing reference " + doc.toString());            
-            writer.addDocument(doc);
+            addDocument(file, ref);
         }
-        
-        writer.commit();
-        pendingReferences.clear();
-        
-        updateReader();
-        
+        pendingReferences.clear();        
     }
     
-    public void shutdown()
+    protected void addDocument(IFile file, ReferenceInfo ref) throws Exception
     {
-        try {
-            writer.close();
-        } catch (Exception e) {
-            IndexingCorePlugin.logException(e);
-        }
-    }
+        Document doc = new Document();
 
-    public IndexReader getReader()
-    {
-        return reader;
+        String path = file.getFullPath().removeLastSegments(1).toString();
+        
+        doc.add(new Field(IndexField.PATH, path, Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field(IndexField.FILENAME, file.getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field(IndexField.REFERENCENAME, ref.name, Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field(IndexField.TYPE, IndexField.REFERENCE, Field.Store.YES, Field.Index.NOT_ANALYZED));
+        
+        IndexingCorePlugin.debug("Indexing reference " + doc.toString());            
+        writer.addDocument(doc);
     }
-
+    
     public void search(Query pathQuery, final IResultHandler handler)
     {
         int hitsPerPage = 100;
@@ -206,5 +167,24 @@ public class DocumentManager
         } catch (IOException e) {
             IndexingCorePlugin.logException(e);
         }
+    }
+    
+    public void shutdown()
+    {
+        try {
+            writer.close();
+        } catch (Exception e) {
+            IndexingCorePlugin.logException(e);
+        }
+    }
+
+    public IndexReader getReader()
+    {
+        return reader;
+    }
+    
+    public IndexWriter getWriter()
+    {
+        return writer;
     }
 }
