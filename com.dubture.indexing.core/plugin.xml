@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="buildParticipant" name="Lucene Build Indexing Participant" schema="schema/buildParticipant.exsd"/>
+   <extension
+         id="indexingBuilder"
+         name="Lucene Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder>
+         <run
+               class="com.dubture.indexing.core.build.IndexingBuilder">
+         </run></builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="com.dubture.indexing.core.IndexingStartup"></startup>
+   </extension>
+
+</plugin>

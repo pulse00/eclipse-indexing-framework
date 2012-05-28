@@ -1,0 +1,7 @@
+.DS_Store
+
+com.dubture.indexing.core/bin/*
+com.dubture.indexing.test/bin/*
+
+com.dubture.indexing.core/target/*
+com.dubture.indexing.test/target/*
