@@ -152,6 +152,7 @@ public class DocumentManager
     
     public void search(Query pathQuery, final IResultHandler handler)
     {
+        //TODO: howto handle this?
         int hitsPerPage = 100;
         TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage, true);
         

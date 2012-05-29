@@ -37,7 +37,6 @@ public class SearchEngine
     private SearchEngine() throws Exception
     {
         manager = DocumentManager.getInstance();
-        new QueryBuilder();
     }
     
     public static SearchEngine getInstance() throws Exception
