@@ -6,4 +6,4 @@ Bundle-Version: 0.0.1
 Bundle-Vendor: http://github.com/pulse00
 Fragment-Host: com.dubture.indexing.core;bundle-version="0.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit;bundle-version="4.10.0"
+Require-Bundle: org.junit4

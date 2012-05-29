@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.dubture.indexing.core,
+ com.dubture.indexing.core.build,
  com.dubture.indexing.core.index,
- com.dubture.indexing.core.search
-Bundle-ClassPath: lib/gson-2.1.jar,
- .
+ com.dubture.indexing.core.search,
+ com.dubture.indexing.core.xml
