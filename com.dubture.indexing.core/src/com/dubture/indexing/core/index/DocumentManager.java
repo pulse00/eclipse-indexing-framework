@@ -147,8 +147,13 @@ public class DocumentManager
     
     protected void addDocument(IFile file, ReferenceInfo ref) throws Exception
     {
+        
+        if (ref.type == null || ref.name == null) {
+            IndexingCorePlugin.debug("Reference info failure: " + ref.metadata);
+            return;
+        }
+        
         Document doc = new Document();
-
         String path = file.getFullPath().removeLastSegments(1).toString();
         
         doc.add(new Field(IndexField.PATH, path, Field.Store.YES, Field.Index.NOT_ANALYZED));

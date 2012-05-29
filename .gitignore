@@ -3,7 +3,9 @@
 com.dubture.indexing.core/bin/*
 com.dubture.indexing.test/bin/*
 com.dubture.indexing.gson/bin/*
+com.dubture.indexing.feature/bin/*
 
 com.dubture.indexing.core/target/*
 com.dubture.indexing.test/target/*
 com.dubture.indexing.gson/target/*
+com.dubture.indexing.feature/target/*
