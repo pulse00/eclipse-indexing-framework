@@ -36,7 +36,7 @@ public class IndexingCorePlugin extends Plugin {
 
 	public static IndexingCorePlugin plugin;
 	
-	public static final String ID = "com.dubture.index.core";
+	public static final String ID = "com.dubture.indexing.core";
 
     private static final String DEBUG = "com.dubture.indexing.core/debug";
 
@@ -86,6 +86,12 @@ public class IndexingCorePlugin extends Plugin {
 	
 	public static void debug(String message)
 	{
+	    if (plugin == null) {
+	        // tests
+	        System.err.println(message);
+	        return;
+	    }
+	    
 	    String debugOption = Platform.getDebugOption(DEBUG);
 	    
 	    if (plugin.isDebugging() && "true".equalsIgnoreCase(debugOption)) {

@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IPath;
 
 import com.dubture.indexing.core.index.DocumentManager;
 import com.dubture.indexing.core.index.IResultHandler;
+import com.dubture.indexing.core.index.IndexField;
 import com.dubture.indexing.core.index.QueryBuilder;
 import com.dubture.indexing.core.index.ReferenceInfo;
 
@@ -64,12 +65,14 @@ public class SearchEngine
         
         manager.search(query, new IResultHandler()
         {
-            
             @Override
             public void handle(Document document)
             {
-                ReferenceInfo info = new ReferenceInfo();
-                info.setName(document.get("name"));
+                ReferenceInfo info = new ReferenceInfo(
+                        document.get(IndexField.TYPE),
+                        document.get(IndexField.REFERENCENAME),
+                        document.get(IndexField.METADATA)
+                );
                 references.add(info);
             }
         });

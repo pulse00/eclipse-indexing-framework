@@ -35,14 +35,13 @@ public class IndexingTest extends TestCase
             DocumentManager manager = TestDocumentManager.getInstance();
             assertEquals(0, manager.getReader().numDocs());
             
-            ReferenceInfo reference = new ReferenceInfo();
-            reference.setName("session");
+            ReferenceInfo reference = new ReferenceInfo("foobar", "session");
             
             manager.addReference(file, reference);
             manager.flush();
             
-            manager.deleteReferences(file);
-            assertEquals(manager.getReader().numDocs(), 0);
+            manager.deleteReferences(file, "foobar");
+            assertEquals(0, manager.getReader().numDocs());
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,8 +61,7 @@ public class IndexingTest extends TestCase
             SearchEngine searchEngine = SearchEngine.getInstance();
             assertEquals(0, manager.getReader().numDocs());
             
-            ReferenceInfo reference = new ReferenceInfo();
-            reference.setName("session");
+            ReferenceInfo reference = new ReferenceInfo("foobar", "session");
             
             manager.addReference(file, reference);
             manager.flush();

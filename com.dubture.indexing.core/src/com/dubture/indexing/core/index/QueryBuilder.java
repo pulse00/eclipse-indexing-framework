@@ -49,7 +49,7 @@ public class QueryBuilder
         return query;
     }
 
-    public static Query createDeleteReferencesQuery(IFile file)
+    public static Query createDeleteReferencesQuery(IFile file, String type)
     {
         BooleanQuery boolQuery = new BooleanQuery();
         String path = file.getFullPath().removeLastSegments(1).toString();
@@ -62,9 +62,11 @@ public class QueryBuilder
                 BooleanClause.Occur.MUST
         );
         
-        boolQuery.add(new TermQuery(new Term(IndexField.TYPE, IndexField.REFERENCE)), 
+        boolQuery.add(new TermQuery(new Term(IndexField.TYPE, type)), 
                 BooleanClause.Occur.MUST
         );
+        
+        IndexingCorePlugin.debug("Creating deleteByReference query: " + boolQuery.toString());
         
         return boolQuery;
     }

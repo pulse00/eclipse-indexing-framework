@@ -20,5 +20,6 @@ public interface IndexField
     public static final String REFERENCENAME    = "referencename";
     public static final String TYPE             = "type";
     public static final String REFERENCE        = "reference";
+    public static final String METADATA         = "metadata";
 
 }

@@ -24,13 +24,15 @@ public class LuceneIndexingRequestor implements IIndexingRequestor
     protected IFile file;
     
     protected DocumentManager manager;
+    
+    protected boolean clean;
 
     public LuceneIndexingRequestor(IFile file)
     {
         try {
             this.file = file;
             manager = DocumentManager.getInstance();
-            manager.deleteReferences(file);
+            clean = false;
         } catch (Exception e) {
             IndexingCorePlugin.logException(e);
         }
@@ -40,6 +42,14 @@ public class LuceneIndexingRequestor implements IIndexingRequestor
     public void addReference(ReferenceInfo reference)
     {
         try {
+            
+            // before adding the references of a file, we remove
+            // the existing ones of that type
+            if (clean == false) {
+                manager.deleteReferences(file, reference.getType());
+                clean = true;
+            }
+            
             manager.addReference(file, reference);
         } catch (Exception e) {
             IndexingCorePlugin.logException(e);

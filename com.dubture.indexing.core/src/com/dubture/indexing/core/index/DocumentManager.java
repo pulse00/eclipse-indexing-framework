@@ -8,6 +8,7 @@
  ******************************************************************************/
 package com.dubture.indexing.core.index;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,9 +25,10 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 
 import com.dubture.indexing.core.IndexingCorePlugin;
 
@@ -64,13 +66,21 @@ public class DocumentManager
                 
     }
     
-    protected Directory getIndex()
+    protected Directory getIndex() throws IOException
     {
         if (index != null) {
             return index;
         }
         
-        return index = new RAMDirectory();
+        IPath location = IndexingCorePlugin.getDefault().getStateLocation();
+        IPath indexPath = location.append("resources/index");
+        File indexFile = indexPath.toFile();
+            
+        if (indexFile.exists() == false && indexFile.mkdirs() == false) {
+            throw new IOException("Unable to create lucene index directory " + indexFile.toString());
+        }        
+        
+        return index = FSDirectory.open(indexFile);
     }
     
     public static DocumentManager getInstance() throws Exception
@@ -82,9 +92,9 @@ public class DocumentManager
         return instance;
     }
 
-    public void deleteReferences(IFile file) throws Exception
+    public void deleteReferences(IFile file, String type) throws Exception
     {
-        Query query = QueryBuilder.createDeleteReferencesQuery(file);
+        Query query = QueryBuilder.createDeleteReferencesQuery(file, type);
         
         writer.deleteDocuments(query);
         writer.commit();
@@ -143,8 +153,10 @@ public class DocumentManager
         
         doc.add(new Field(IndexField.PATH, path, Field.Store.YES, Field.Index.NOT_ANALYZED));
         doc.add(new Field(IndexField.FILENAME, file.getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        
+        doc.add(new Field(IndexField.TYPE, ref.getType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
         doc.add(new Field(IndexField.REFERENCENAME, ref.name, Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new Field(IndexField.TYPE, IndexField.REFERENCE, Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field(IndexField.METADATA, ref.getMetadata(), Field.Store.YES, Field.Index.NOT_ANALYZED));
         
         IndexingCorePlugin.debug("Indexing reference " + doc.toString());            
         writer.addDocument(doc);

@@ -12,7 +12,7 @@
   </modules>
 
   <properties>
-    <tycho-version>0.13.0</tycho-version>
+    <tycho-version>0.15.0</tycho-version>
   </properties>
 
   <repositories>
@@ -26,7 +26,22 @@
      <layout>p2</layout>
      <url>http://download.eclipse.org/releases/indigo/</url>
    </repository>	
+
   </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>tycho</id>
+      <url>https://oss.sonatype.org/content/repositories/orgeclipsetycho-255/</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
 
   <build>
     <plugins>
