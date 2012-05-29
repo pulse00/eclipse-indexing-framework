@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.dubture.indexing.feature"
+      label="Lucene Indexing Feature"
+      version="0.0.1"
+      provider-name="http://github.com/pulse00">
+
+   <description url="https://github.com/pulse00/eclipse-indexing-framework">
+      This eclipse plugin provides an indexing infrastructure for other plugins based on the apache lucene search engine.
+
+It works by adding an IncrementalProjectBuilder to projects with the nature of bundles implementing the com.dubture.indexing.core.buildParticipant extension point.
+
+The implementing extension point will receive an IResource during the build and can then access an IndexingRequestor which can be used to store ReferenceInformation into a lucene index.
+
+Using the SearchEngine utility class, this index can be queried later on.
+
+For an example implementation of the extension point, see the Composer Eclipse Plugin.
+
+The plugin is still alpha and its API will most likely change.
+   </description>
+
+   <copyright url="http://www.apache.org/licenses/LICENSE-2.0">
+      Copyright [2012] [Robert Gründler]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+   </copyright>
+
+   <license url="http://www.example.com/http://www.apache.org/licenses/LICENSE-2.0">
+      Copyright [2012] [Robert Gründler]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+   </license>
+
+   <plugin
+         id="com.dubture.indexing.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dubture.indexing.gson"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
