@@ -21,7 +21,7 @@
           <useUIHarness>false</useUIHarness>
 		  <useUIThread>false</useUIThread>
           <excludes>
-            <exclude>**/TestErrorReporter.java</exclude>			
+            <exclude>**/TestDocumentManager.java</exclude>			
           </excludes>				  
         </configuration>
       </plugin>
