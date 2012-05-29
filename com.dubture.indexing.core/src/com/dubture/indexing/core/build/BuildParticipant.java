@@ -104,6 +104,7 @@ public class BuildParticipant
         command.setBuilderName(BUILDER_ID);
         ICommand[] nc = new ICommand[commands.length + 1];
         
+        //TODO: make this configurable
         // Add it before other builders.
         System.arraycopy(commands, 0, nc, 1, commands.length);
         nc[0] = command;

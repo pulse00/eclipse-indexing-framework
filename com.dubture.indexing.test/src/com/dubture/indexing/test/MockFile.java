@@ -54,7 +54,6 @@ public class MockFile implements IFile
 
     }
 
-    @Override
     public void accept(IResourceProxyVisitor visitor, int depth, int memberFlags)
             throws CoreException
     {
