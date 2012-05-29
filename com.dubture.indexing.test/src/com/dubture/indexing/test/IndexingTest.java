@@ -67,7 +67,7 @@ public class IndexingTest extends TestCase
             manager.flush();
             
             IPath searchPath = new Path("/test/foo/bar");
-            List<ReferenceInfo> references = searchEngine.findReferences(searchPath);
+            List<ReferenceInfo> references = searchEngine.findReferences(searchPath, "foobar");
             assertEquals(1, references.size());
             
         } catch (Exception e) {

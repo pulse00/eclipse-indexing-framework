@@ -49,14 +49,14 @@ public class SearchEngine
         return instance;
     }
     
-    public List<ReferenceInfo> findReferences(IPath path) throws Exception
+    public List<ReferenceInfo> findReferences(IPath path, String referenceId) throws Exception
     {
-        return findByQuery(QueryBuilder.createPathQuery(path));
+        return findByQuery(QueryBuilder.createPathQuery(path, referenceId));
     }
     
-    public List<ReferenceInfo> findReferences(IFile file) throws Exception
+    public List<ReferenceInfo> findReferences(IFile file, String referenceId) throws Exception
     {
-        return findByQuery(QueryBuilder.createFileQuery(file));
+        return findByQuery(QueryBuilder.createFileQuery(file, referenceId));
     }
     
     protected List<ReferenceInfo> findByQuery(Query query)

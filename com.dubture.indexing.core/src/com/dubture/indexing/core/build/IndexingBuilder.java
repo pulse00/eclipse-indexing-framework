@@ -88,7 +88,7 @@ public class IndexingBuilder extends IncrementalProjectBuilder
             } else if ("json".equals(file.getFileExtension()) && builder.hasJsonVisitor()) {
                 
                 JsonIndexingVisitor visitor = builder.getJsonVisitor();
-                visitor.setRequestor(requestor);
+                visitor.setRequestor(requestor).setResource(file);
                 FieldNamingStrategy strategy = visitor.getFieldNamingStrategy();
                 Gson gson = new GsonBuilder().setFieldNamingStrategy(strategy).create();
                 InputStreamReader reader = new InputStreamReader(file.getContents());

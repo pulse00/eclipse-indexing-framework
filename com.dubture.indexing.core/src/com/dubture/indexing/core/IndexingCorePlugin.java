@@ -57,7 +57,7 @@ public class IndexingCorePlugin extends Plugin {
                 try {
                     setupBuilders();
                 } catch (CoreException e) {
-                    e.printStackTrace();
+                    IndexingCorePlugin.logException(e);
                     return Status.CANCEL_STATUS;
                 }
                 return Status.OK_STATUS;
@@ -117,7 +117,7 @@ public class IndexingCorePlugin extends Plugin {
                 try {
                     participant.addBuilder(project);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    IndexingCorePlugin.logException(e);
                 }
             }
         }

@@ -11,6 +11,7 @@ package com.dubture.indexing.core.index;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.eclipse.core.resources.IFile;
@@ -27,26 +28,39 @@ import com.dubture.indexing.core.IndexingCorePlugin;
  */
 public class QueryBuilder
 {
-    public static Query createFileQuery(IFile file)
+    public static Query createFileQuery(IFile file, String referenceId)
     {
         String filename = file.getName();
         IPath path = file.getFullPath().removeLastSegments(1);
         
-        TermQuery query = new TermQuery(new Term(IndexField.PATH, path.toString()));
+        IndexingCorePlugin.debug("Getting fileQuery for " + file.getName());
+        
+        PrefixQuery query = new PrefixQuery(new Term(IndexField.PATH, path.toString()));
         TermQuery nameQuery = new TermQuery(new Term(IndexField.FILENAME, filename));
+        TermQuery refQuery = new TermQuery(new Term(IndexField.TYPE, referenceId));        
         
         BooleanQuery boolQuery = new BooleanQuery();
         boolQuery.add(query, BooleanClause.Occur.MUST);
         boolQuery.add(nameQuery, BooleanClause.Occur.MUST);
+        boolQuery.add(refQuery, BooleanClause.Occur.MUST);
         
+        IndexingCorePlugin.debug("query: " + boolQuery.toString());
         return boolQuery;
     }
     
-    public static Query createPathQuery(IPath path)
+    public static Query createPathQuery(IPath path, String referenceId)
     {
         IndexingCorePlugin.debug("Getting pathquery for " + path.toString());
-        TermQuery query = new TermQuery(new Term(IndexField.PATH, path.toString()));
-        return query;
+        
+        PrefixQuery query = new PrefixQuery(new Term(IndexField.PATH, path.toString()));
+        TermQuery refQuery = new TermQuery(new Term(IndexField.TYPE, referenceId));
+        
+        BooleanQuery boolQuery = new BooleanQuery();
+        boolQuery.add(query, BooleanClause.Occur.MUST);
+        boolQuery.add(refQuery, BooleanClause.Occur.MUST);
+        
+        IndexingCorePlugin.debug("query: " + boolQuery.toString());
+        return boolQuery;
     }
 
     public static Query createDeleteReferencesQuery(IFile file, String type)
