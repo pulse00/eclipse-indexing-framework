@@ -21,6 +21,12 @@ public class TestDocumentManager extends DocumentManager
         super();
     }
     
+    public void resetIndex()
+    {
+    	index = new RAMDirectory();
+    }
+ 
+    
     @Override
     protected Directory getIndex()
     {

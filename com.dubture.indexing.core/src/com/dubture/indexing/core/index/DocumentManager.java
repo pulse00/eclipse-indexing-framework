@@ -66,6 +66,11 @@ public class DocumentManager
                 
     }
     
+    public void resetIndex()
+    {
+    	// used for tests
+    }
+    
     protected Directory getIndex() throws IOException
     {
         if (index != null) {

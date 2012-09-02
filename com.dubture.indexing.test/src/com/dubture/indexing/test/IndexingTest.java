@@ -33,6 +33,7 @@ public class IndexingTest extends TestCase
             IFile file = new MockFile("services.xml", path);
            
             DocumentManager manager = TestDocumentManager.getInstance();
+            manager.resetIndex();
             assertEquals(0, manager.getReader().numDocs());
             
             ReferenceInfo reference = new ReferenceInfo("foobar", "session");
@@ -58,6 +59,7 @@ public class IndexingTest extends TestCase
             IFile file = new MockFile("services.xml", path);
            
             DocumentManager manager = TestDocumentManager.getInstance();
+            manager.resetIndex();
             SearchEngine searchEngine = SearchEngine.getInstance();
             assertEquals(0, manager.getReader().numDocs());
             
