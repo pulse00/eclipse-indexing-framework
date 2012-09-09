@@ -28,9 +28,7 @@ import com.dubture.indexing.core.index.JsonIndexingVisitor;
 import com.dubture.indexing.core.index.LuceneIndexingRequestor;
 import com.dubture.indexing.core.index.XmlIndexingVisitor;
 import com.dubture.indexing.core.xml.PositionalXMLReader;
-import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class IndexingBuilder extends IncrementalProjectBuilder
 {
@@ -89,8 +87,7 @@ public class IndexingBuilder extends IncrementalProjectBuilder
                 
                 JsonIndexingVisitor visitor = builder.getJsonVisitor();
                 visitor.setRequestor(requestor).setResource(file);
-                FieldNamingStrategy strategy = visitor.getFieldNamingStrategy();
-                Gson gson = new GsonBuilder().setFieldNamingStrategy(strategy).create();
+                Gson gson = visitor.getBuilder();
                 InputStreamReader reader = new InputStreamReader(file.getContents());
                 Object object = gson.fromJson(reader, visitor.getTransformerClass());
                 visitor.visit(object);

@@ -9,6 +9,7 @@
 package com.dubture.indexing.core.index;
 
 import com.google.gson.FieldNamingStrategy;
+import com.google.gson.Gson;
 
 /**
  * IndexingVisitor for json files.
@@ -24,6 +25,13 @@ public interface JsonIndexingVisitor extends IndexingVisitor
      * @return
      */
     FieldNamingStrategy getFieldNamingStrategy();
+    
+    /**
+     * Retrieve the gson object for your indexer
+     * 
+     * @return
+     */
+    Gson getBuilder();
     
     /**
      * The transformed POJO.
