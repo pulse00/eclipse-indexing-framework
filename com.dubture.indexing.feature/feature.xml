@@ -2,7 +2,7 @@
 <feature
       id="com.dubture.indexing.feature"
       label="Lucene Indexing Feature"
-      version="0.0.12"
+      version="0.0.13"
       provider-name="http://github.com/pulse00">
 
    <description url="https://github.com/pulse00/eclipse-indexing-framework">

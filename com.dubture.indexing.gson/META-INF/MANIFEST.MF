@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Gson Bundle
 Bundle-SymbolicName: com.dubture.indexing.gson
-Bundle-Version: 0.0.12
+Bundle-Version: 0.0.13
 Export-Package: com.google.gson,
  com.google.gson.annotations,
  com.google.gson.internal,
