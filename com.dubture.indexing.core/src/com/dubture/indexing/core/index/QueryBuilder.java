@@ -31,7 +31,7 @@ public class QueryBuilder
     public static Query createFileQuery(IFile file, String referenceId)
     {
         String filename = file.getName();
-        IPath path = file.getFullPath().removeLastSegments(1);
+        IPath path = file.getFullPath();
         
         IndexingCorePlugin.debug("Getting fileQuery for " + file.getName());
         
@@ -66,7 +66,7 @@ public class QueryBuilder
     public static Query createDeleteReferencesQuery(IFile file, String type)
     {
         BooleanQuery boolQuery = new BooleanQuery();
-        String path = file.getFullPath().removeLastSegments(1).toString();
+        String path = file.getFullPath().toString();
         
         boolQuery.add(new TermQuery(new Term(IndexField.PATH, path)), 
                 BooleanClause.Occur.MUST

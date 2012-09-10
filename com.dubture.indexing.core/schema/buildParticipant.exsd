@@ -17,9 +17,9 @@
          </appinfo>
       </annotation>
       <complexType>
-         <choice>
-            <element ref="participant"/>
-         </choice>
+         <sequence>
+            <element ref="participant" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
@@ -59,31 +59,31 @@
          <attribute name="file_extensions" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Space separated list of file extensions registered for this visitor.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="xml_visitor" type="string">
+         <attribute name="visitor" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The Implementation of the IndexingVisitor for the participant.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":com.dubture.indexing.core.index.XmlIndexingVisitor"/>
+                  <meta.attribute kind="java" basedOn=":com.dubture.indexing.core.index.IndexingVisitor"/>
                </appinfo>
             </annotation>
          </attribute>
-         <attribute name="json_visitor" type="string">
+         <attribute name="name" type="string">
             <annotation>
                <documentation>
-                  
+                  The human readable name of the participant
                </documentation>
-               <appinfo>
-                  <meta.attribute kind="java" basedOn=":com.dubture.indexing.core.index.JsonIndexingVisitor"/>
-               </appinfo>
             </annotation>
          </attribute>
       </complexType>
+   </element>
+
+   <element name="new_element" type="string">
    </element>
 
    <annotation>

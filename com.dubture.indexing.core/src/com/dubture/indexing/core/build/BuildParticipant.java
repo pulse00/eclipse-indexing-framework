@@ -10,12 +10,14 @@ package com.dubture.indexing.core.build;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 
+import com.dubture.indexing.core.index.IndexingVisitor;
 import com.dubture.indexing.core.index.JsonIndexingVisitor;
 import com.dubture.indexing.core.index.XmlIndexingVisitor;
 
@@ -35,24 +37,25 @@ public class BuildParticipant
 
     private String natureId;
     private List<String> extensions;
-    private XmlIndexingVisitor xmlVisitor;
-    private JsonIndexingVisitor jsonVisitor;
-    
+    private IndexingVisitor visitor;
     
     /**
      * Creates a BuildParticipant with the corresponding nature and file extensions 
      * @param natureId
      * @param extensions
+     * @param visitor2 
      */
-    public BuildParticipant(String natureId, String extensions) {
+    public BuildParticipant(String natureId, String extensions, IndexingVisitor visitor) {
         
         this.natureId = natureId;
         this.extensions = new ArrayList<String>();
+        this.visitor = visitor;
         
-        if (extensions.contains(",")) {
-            for (String extension : extensions.split(",")) {
-                this.extensions.add(extension);
-            }
+        if (extensions.contains(" ")) {
+        	StringTokenizer tokenizer = new StringTokenizer(extensions);
+        	while(tokenizer.hasMoreTokens()) {
+        		this.extensions.add(tokenizer.nextToken());
+        	}
         } else {
             this.extensions.add(extensions);
         }
@@ -113,33 +116,23 @@ public class BuildParticipant
         
     }
 
-    public void setXmlVisitor(XmlIndexingVisitor xmlVisitor)
-    {
-        this.xmlVisitor = xmlVisitor;
-    }
-    
     public boolean hasXmlVisitor()
     {
-        return xmlVisitor != null;
-    }
-
-    public XmlIndexingVisitor getXmlVisitor()
-    {
-        return xmlVisitor;
+        return visitor instanceof XmlIndexingVisitor;
     }
 
     public boolean hasJsonVisitor()
     {
-        return jsonVisitor != null;
+        return visitor instanceof JsonIndexingVisitor;
     }
     
     public JsonIndexingVisitor getJsonVisitor()
     {
-        return jsonVisitor;
+        return (JsonIndexingVisitor) visitor;
     }
 
-    public void setJsonVisitor(JsonIndexingVisitor jsonVisitor)
-    {
-        this.jsonVisitor = jsonVisitor;
-    }
+	public XmlIndexingVisitor getXmlVisitor()
+	{
+		return (XmlIndexingVisitor) visitor;
+	}
 }

@@ -152,15 +152,16 @@ public class DocumentManager
     
     protected void addDocument(IFile file, ReferenceInfo ref) throws Exception
     {
-        
         if (ref.type == null || ref.name == null) {
             IndexingCorePlugin.debug("Reference info failure: " + ref.metadata);
             return;
         }
         
         Document doc = new Document();
-        String path = file.getFullPath().removeLastSegments(1).toString();
+//        String path = file.getFullPath().removeLastSegments(1).toString();
+        String path = file.getFullPath().toString();
         
+        IndexingCorePlugin.debug("indexing document with path " + path);
         doc.add(new Field(IndexField.PATH, path, Field.Store.YES, Field.Index.NOT_ANALYZED));
         doc.add(new Field(IndexField.FILENAME, file.getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
         

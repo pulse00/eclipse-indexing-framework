@@ -11,13 +11,11 @@ package com.dubture.indexing.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 
 import com.dubture.indexing.core.build.BuildParticipant;
-import com.dubture.indexing.core.index.JsonIndexingVisitor;
-import com.dubture.indexing.core.index.XmlIndexingVisitor;
+import com.dubture.indexing.core.index.IndexingVisitor;
 
 /**
  * 
@@ -36,16 +34,6 @@ public class ExtensionManager
         initBuildParticipants();
     }
     
-    private Object getExtension(IConfigurationElement element, String name)
-    {
-        try {
-            return element.createExecutableExtension(name);
-        } catch (CoreException e) {
-        }
-        
-        return null;
-    }
-    
     private void initBuildParticipants()
     {
         participants = new ArrayList<BuildParticipant>();
@@ -55,11 +43,10 @@ public class ExtensionManager
         try {                           
             
             for (IConfigurationElement element : config) {
+            	
                 String nature = element.getAttribute("nature_id");
                 String extensions = element.getAttribute("file_extensions");
-                
-                XmlIndexingVisitor xmlVisitor = (XmlIndexingVisitor) getExtension(element, "xml_visitor");
-                JsonIndexingVisitor jsonVisitor = (JsonIndexingVisitor) getExtension(element, "json_visitor");
+                IndexingVisitor visitor = (IndexingVisitor) element.createExecutableExtension("visitor");
                 
                 if (nature != null) {
                     
@@ -76,23 +63,13 @@ public class ExtensionManager
                         continue;
                     }
                         
-                    BuildParticipant participant = new BuildParticipant(nature, extensions);
-                    
-                    if (xmlVisitor != null) {
-                        participant.setXmlVisitor(xmlVisitor);
-                    }
-                    
-                    if (jsonVisitor != null) {
-                        participant.setJsonVisitor(jsonVisitor);
-                    }
-                    
+                    BuildParticipant participant = new BuildParticipant(nature, extensions, visitor);
                     participants.add(participant);
                 }
             }
         } catch (Exception e1) {
             IndexingCorePlugin.logException(e1);
         }
-        
     }
     
     public static ExtensionManager getInstance()
