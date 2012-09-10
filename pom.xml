@@ -8,7 +8,6 @@
   <modules>
     <module>com.dubture.indexing.core</module>
     <module>com.dubture.indexing.test</module>
-    <module>com.dubture.indexing.gson</module>
     <module>com.dubture.indexing.feature</module>
   </modules>
 
