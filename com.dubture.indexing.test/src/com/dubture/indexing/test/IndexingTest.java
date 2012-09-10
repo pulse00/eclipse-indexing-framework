@@ -77,4 +77,37 @@ public class IndexingTest extends TestCase
             fail();
         }
     }
+    
+    public void testDelete() 
+    {
+        try {
+            
+            IPath path = new Path("/test/foo/bar");
+            IFile file = new MockFile("services.xml", path);
+           
+            DocumentManager manager = TestDocumentManager.getInstance();
+            manager.resetIndex();
+            SearchEngine searchEngine = SearchEngine.getInstance();
+            assertEquals(0, manager.getReader().numDocs());
+            
+            manager.addReference(file, new ReferenceInfo("foobar", "session2"));
+            manager.addReference(file, new ReferenceInfo("manamana", "session"));
+            
+            manager.flush();
+            
+            IPath searchPath = new Path("/test/foo/bar/services.xml");
+            List<ReferenceInfo> references = searchEngine.findReferences(searchPath, "foobar");
+            assertEquals(1, references.size());
+            
+            manager.deleteReferences(file, "foobar");
+            
+            searchPath = new Path("/test/foo/bar/services.xml");
+            references = searchEngine.findReferences(searchPath, "manamana");
+            assertEquals(1, references.size());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
 }

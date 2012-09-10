@@ -23,7 +23,13 @@ public class TestDocumentManager extends DocumentManager
     
     public void resetIndex()
     {
-    	index = new RAMDirectory();
+    	try {
+			index.close();
+			index = null;
+			init();
+		} catch (Exception e) {
+			
+		}
     }
  
     

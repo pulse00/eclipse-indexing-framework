@@ -10,8 +10,10 @@ package com.dubture.indexing.core.index;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -47,7 +49,7 @@ public class DocumentManager
     
     protected IndexReader reader;
     
-    protected Map<IFile, ReferenceInfo> pendingReferences;
+    protected Map<IFile, List<ReferenceInfo> > pendingReferences;
     
     protected Directory index;
     
@@ -55,15 +57,20 @@ public class DocumentManager
     
     protected DocumentManager() throws Exception
     {
-        StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_29);
-        MaxFieldLength length = new MaxFieldLength(255);
-        
-        index = getIndex();
-        writer = new IndexWriter(index, analyzer, length);
-        reader = IndexReader.open(index, true);
-        searcher = new IndexSearcher(reader);        
-        pendingReferences = new HashMap<IFile, ReferenceInfo>();
-                
+        init();
+    }
+    
+    protected void init() throws Exception {
+    	
+    	StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_29);
+    	MaxFieldLength length = new MaxFieldLength(255);
+    	
+    	index = getIndex();
+    	writer = new IndexWriter(index, analyzer, length);
+    	reader = IndexReader.open(index, true);
+    	searcher = new IndexSearcher(reader);        
+    	pendingReferences = new HashMap<IFile, List<ReferenceInfo>>();
+    	
     }
     
     public void resetIndex()
@@ -126,7 +133,15 @@ public class DocumentManager
     
     public void addReference(IFile file, ReferenceInfo reference) throws Exception
     {
-        pendingReferences.put(file, reference);
+    	IndexingCorePlugin.debug("Adding pending reference " + reference.name);
+    	
+    	if (!pendingReferences.containsKey(file)) {
+    		pendingReferences.put(file, new ArrayList<ReferenceInfo>());
+    	}
+    	
+    	List<ReferenceInfo> list = pendingReferences.get(file);
+    	list.add(reference);
+        pendingReferences.put(file, list);
     }
 
     public void flush() throws Exception
@@ -141,11 +156,15 @@ public class DocumentManager
     {
         Iterator it = pendingReferences.keySet().iterator();
         
+        IndexingCorePlugin.debug("flushing " + pendingReferences.size() + " references");
         while(it.hasNext()) {
             
             IFile file = (IFile) it.next();
-            ReferenceInfo ref = pendingReferences.get(file);
-            addDocument(file, ref);
+            List<ReferenceInfo> refs = pendingReferences.get(file);
+            
+            for (ReferenceInfo info : refs) {
+            	addDocument(file, info);
+            }
         }
         pendingReferences.clear();        
     }
@@ -158,7 +177,6 @@ public class DocumentManager
         }
         
         Document doc = new Document();
-//        String path = file.getFullPath().removeLastSegments(1).toString();
         String path = file.getFullPath().toString();
         
         IndexingCorePlugin.debug("indexing document with path " + path);
