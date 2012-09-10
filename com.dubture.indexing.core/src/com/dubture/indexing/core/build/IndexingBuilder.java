@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.w3c.dom.Document;
 
 import com.dubture.indexing.core.ExtensionManager;
+import com.dubture.indexing.core.IndexingCorePlugin;
 import com.dubture.indexing.core.index.JsonIndexingVisitor;
 import com.dubture.indexing.core.index.LuceneIndexingRequestor;
 import com.dubture.indexing.core.index.XmlIndexingVisitor;
@@ -69,6 +70,29 @@ public class IndexingBuilder extends IncrementalProjectBuilder
         delta.accept(new IndexingDeltaVisitor());
     }
     
+    private void deleteReferences(IFile file) throws Exception
+    {
+        for (BuildParticipant builder : ExtensionManager.getInstance().getBuildParticipants()) {
+            
+            LuceneIndexingRequestor requestor = new LuceneIndexingRequestor(file);
+            
+            if ("xml".equals(file.getFileExtension()) && builder.hasXmlVisitor()) {
+                
+                XmlIndexingVisitor visitor = builder.getXmlVisitor();
+                visitor.setRequestor(requestor).setResource(file);
+                visitor.resourceDeleted(file);
+                
+            } else if ("json".equals(file.getFileExtension()) && builder.hasJsonVisitor()) {
+
+                JsonIndexingVisitor visitor = builder.getJsonVisitor();
+                visitor.setRequestor(requestor).setResource(file);
+                visitor.resourceDeleted(file);
+            }
+            
+            requestor.flush();
+        }
+    }
+    
     private void callParticipants(IFile file) throws Exception
     {
         for (BuildParticipant builder : ExtensionManager.getInstance().getBuildParticipants()) {
@@ -106,21 +130,28 @@ public class IndexingBuilder extends IncrementalProjectBuilder
         public boolean visit(IResourceDelta delta) throws CoreException {
             
             IResource resource = delta.getResource();
+            
             switch (delta.getKind()) {
                 case IResourceDelta.ADDED:
+                	
                     // handle added resource
-                    
                     if (resource instanceof IFile) {
                         try {
                             callParticipants((IFile) resource);
                         } catch (Exception e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                        	IndexingCorePlugin.logException(e);
                         }
                     }
                     break;
                 case IResourceDelta.REMOVED:
-                    // handle removed resource
+                	
+                	if (resource instanceof IFile) {
+                		try {
+							deleteReferences((IFile) resource);
+						} catch (Exception e) {
+							IndexingCorePlugin.logException(e);
+						}
+                	}
                     break;
                 case IResourceDelta.CHANGED:
                     
@@ -128,8 +159,7 @@ public class IndexingBuilder extends IncrementalProjectBuilder
                         try {
                             callParticipants((IFile) resource);
                         } catch (Exception e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                        	IndexingCorePlugin.logException(e);
                         }
                     }
                     break;

@@ -33,12 +33,6 @@ public interface JsonIndexingVisitor extends IndexingVisitor
      */
     Gson getBuilder();
     
-    /**
-     * The transformed POJO.
-     * 
-     * @param object can be safely cast to your implemetation object.
-     */
-    void visit(Object object);
     
     /**
      * The mapped POJO.

@@ -108,6 +108,7 @@ public class DocumentManager
     {
         Query query = QueryBuilder.createDeleteReferencesQuery(file, type);
         
+        IndexingCorePlugin.debug("deleting references for " + file.getFullPath().toString() + " => " + type);
         writer.deleteDocuments(query);
         writer.commit();
         
@@ -116,8 +117,7 @@ public class DocumentManager
     
     protected void updateReader()
     {
-        try {
-            
+    	try {
             IndexReader newReader = reader.reopen();
             
             if (newReader != reader) {

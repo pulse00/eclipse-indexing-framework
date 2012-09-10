@@ -64,5 +64,15 @@ public class LuceneIndexingRequestor implements IIndexingRequestor
         } catch (Exception e) {
             IndexingCorePlugin.logException(e);
         }
-    }    
+    }
+
+	@Override
+	public void deleteReferences(IFile file, String type)
+	{
+		try {
+			manager.deleteReferences(file, type);
+		} catch (Exception e) {
+			IndexingCorePlugin.logException(e);
+		}
+	}    
 }

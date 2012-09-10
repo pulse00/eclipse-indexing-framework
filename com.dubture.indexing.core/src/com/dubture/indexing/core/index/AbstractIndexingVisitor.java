@@ -8,7 +8,6 @@
  ******************************************************************************/
 package com.dubture.indexing.core.index;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 
 /**
@@ -21,6 +20,9 @@ public abstract class AbstractIndexingVisitor implements IndexingVisitor
 {
     protected IIndexingRequestor requestor;
     protected IResource resource;
+    
+    @Override
+    abstract public void visit(Object file);
     
     @Override
     public IndexingVisitor setRequestor(IIndexingRequestor requestor)
@@ -39,11 +41,5 @@ public abstract class AbstractIndexingVisitor implements IndexingVisitor
     {
         this.resource = resource;
         return this;
-    }
-    
-    @Override
-    public void visit(IFile file)
-    {
-        
     }
 }

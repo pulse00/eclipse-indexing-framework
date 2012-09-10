@@ -7,12 +7,14 @@
  * file that was distributed with this source code.
  ******************************************************************************/
 package com.dubture.indexing.core.index;
+import org.eclipse.core.resources.IFile;
 
 
 public interface IIndexingRequestor
 {
-    
     void addReference(ReferenceInfo reference);
+    
+    void deleteReferences(IFile file, String type);
     
     void flush();
 
