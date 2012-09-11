@@ -102,6 +102,10 @@ public class IndexingTest extends TestCase
             manager.deleteReferences(file, "foobar");
             
             searchPath = new Path("/test/foo/bar/services.xml");
+            
+            references = searchEngine.findReferences(searchPath, "foobar");
+            assertEquals(0, references.size());
+            
             references = searchEngine.findReferences(searchPath, "manamana");
             assertEquals(1, references.size());
 
