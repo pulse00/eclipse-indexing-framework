@@ -11,7 +11,6 @@ package com.dubture.indexing.core;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -65,9 +64,10 @@ public class IndexingCorePlugin extends Plugin {
         };
         
         job.schedule();
+        
 	}
 	
-    /*
+	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
@@ -107,19 +107,18 @@ public class IndexingCorePlugin extends Plugin {
 	
     private void setupBuilders() throws CoreException
     {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+        	setupBuilder(project);
+        }
+    }
+    
+    public void setupBuilder(IProject project ) throws CoreException
+    {
         ExtensionManager manager = ExtensionManager.getInstance();
-        
         List<BuildParticipant> participants = manager.getBuildParticipants();
         
-        for (IProject project : workspace.getRoot().getProjects()) {
-            for (BuildParticipant participant : participants) {
-                try {
-                    participant.addBuilder(project);
-                } catch (Exception e) {
-                    IndexingCorePlugin.logException(e);
-                }
-            }
+        for (BuildParticipant participant : participants) {
+            participant.addBuilder(project);
         }
     }
 }
