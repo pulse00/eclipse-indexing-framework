@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Indexing Core
 Bundle-SymbolicName: com.dubture.indexing.core;singleton:=true
-Bundle-Version: 0.0.13
+Bundle-Version: 0.0.14
 Bundle-Activator: com.dubture.indexing.core.IndexingCorePlugin
 Bundle-Vendor: http://github.com/pulse00
 Require-Bundle: org.eclipse.core.runtime,
