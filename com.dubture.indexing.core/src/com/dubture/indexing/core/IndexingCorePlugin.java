@@ -108,7 +108,9 @@ public class IndexingCorePlugin extends Plugin {
     private void setupBuilders() throws CoreException
     {
         for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-        	setupBuilder(project);
+        	if (project.isOpen()) {
+        		setupBuilder(project);
+        	}
         }
     }
     
