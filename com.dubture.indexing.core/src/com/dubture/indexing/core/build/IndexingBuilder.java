@@ -9,7 +9,6 @@
 package com.dubture.indexing.core.build;
 
 import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -108,13 +107,14 @@ public class IndexingBuilder extends IncrementalProjectBuilder
                 visitor.visit(doc);
                 
             } else if ("json".equals(file.getFileExtension()) && builder.hasJsonVisitor()) {
-                
+
+            	//TODO: this needs to refactored. the visitor needs to be able to specify if
+            	// he accepts the resource
+            	
                 JsonIndexingVisitor visitor = builder.getJsonVisitor();
                 visitor.setRequestor(requestor).setResource(file);
                 Gson gson = visitor.getBuilder();
-                InputStreamReader reader = new InputStreamReader(file.getContents());
-                Object object = gson.fromJson(reader, visitor.getTransformerClass());
-                visitor.visit(object);
+                visitor.visit(file.getContents());
             }
             
             requestor.flush();
