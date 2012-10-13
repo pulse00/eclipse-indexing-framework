@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dubture.indexing</groupId>
   <artifactId>parent</artifactId>
-  <version>0.0.14</version>
+  <version>0.0.15-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
     <module>com.dubture.indexing.core</module>
@@ -22,9 +22,9 @@
      <url>http://pulse00.github.com/p2/</url>
    </repository>  
    <repository>
-     <id>indigo</id>
+     <id>juno</id>
      <layout>p2</layout>
-     <url>http://download.eclipse.org/releases/indigo/</url>
+     <url>http://download.eclipse.org/releases/juno/</url>
    </repository>	
 
   </repositories>
