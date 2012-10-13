@@ -27,8 +27,8 @@ import com.dubture.indexing.core.IndexingCorePlugin;
 import com.dubture.indexing.core.index.JsonIndexingVisitor;
 import com.dubture.indexing.core.index.LuceneIndexingRequestor;
 import com.dubture.indexing.core.index.XmlIndexingVisitor;
+import com.dubture.indexing.core.log.Logger;
 import com.dubture.indexing.core.xml.PositionalXMLReader;
-import com.google.gson.Gson;
 
 public class IndexingBuilder extends IncrementalProjectBuilder
 {
@@ -94,10 +94,15 @@ public class IndexingBuilder extends IncrementalProjectBuilder
     
     private void callParticipants(IFile file) throws Exception
     {
+    	if (file != null) {
+    		Logger.debug("Calling participants on " + file.getName());
+    	}
+    	
+    	LuceneIndexingRequestor requestor = new LuceneIndexingRequestor(file);
+    	
         for (BuildParticipant builder : ExtensionManager.getInstance().getBuildParticipants()) {
             
-            LuceneIndexingRequestor requestor = new LuceneIndexingRequestor(file);
-            
+        	Logger.debug("checking builder " + builder.getClass().getName());
             if ("xml".equals(file.getFileExtension()) && builder.hasXmlVisitor()) {
                 
                 FileInputStream fis = new FileInputStream(file.getLocation().toFile());
@@ -107,13 +112,9 @@ public class IndexingBuilder extends IncrementalProjectBuilder
                 visitor.visit(doc);
                 
             } else if ("json".equals(file.getFileExtension()) && builder.hasJsonVisitor()) {
-
-            	//TODO: this needs to refactored. the visitor needs to be able to specify if
-            	// he accepts the resource
-            	
+            	Logger.debug("calling json visitor ");
                 JsonIndexingVisitor visitor = builder.getJsonVisitor();
                 visitor.setRequestor(requestor).setResource(file);
-                Gson gson = visitor.getBuilder();
                 visitor.visit(file.getContents());
             }
             
