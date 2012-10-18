@@ -67,6 +67,7 @@ public class DocumentManager
     	
     	index = getIndex();
     	writer = new IndexWriter(index, analyzer, length);
+    	writer.commit();
     	reader = IndexReader.open(index, true);
     	searcher = new IndexSearcher(reader);        
     	pendingReferences = new HashMap<IFile, List<ReferenceInfo>>();
