@@ -9,3 +9,7 @@ com.dubture.indexing.core/target/*
 com.dubture.indexing.test/target/*
 com.dubture.indexing.gson/target/*
 com.dubture.indexing.feature/target/*
+
+.settings/
+.project
+.classpath
