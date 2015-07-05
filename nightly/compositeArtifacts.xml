@@ -6,7 +6,7 @@
     <property name="p2.timestamp" value="1243822502442"/>
   </properties>
   <children size="1">
-    <child location="http://dl.bintray.com/zulus/indexing-framework/nightly/0.0.13/"/>
+    <child location="http://dl.bintray.com/zulus/indexing-framework/nightly/0.0.15/"/>
   </children>
 </repository>
 
