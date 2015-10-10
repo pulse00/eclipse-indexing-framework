@@ -16,7 +16,7 @@
 	<properties>
 		<tycho-version>0.22.0</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<eclipse.name>luna</eclipse.name>
+		<eclipse.name>mars</eclipse.name>
 		<release>false</release>
 		<bintray.repo>indexing-framework</bintray.repo>
 		<bintray.version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</bintray.version>
@@ -27,6 +27,11 @@
 			<id>eclipse</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/${eclipse.name}</url>
+		</repository>
+		<repository>
+			<id>eclipse-orbit</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20150821153341/repository/</url>
 		</repository>
 
 	</repositories>
@@ -81,11 +86,6 @@
 							<os>macosx</os>
 							<ws>cocoa</ws>
 							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
-							<arch>x86</arch>
 						</environment>
 					</environments>
 				</configuration>
