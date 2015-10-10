@@ -2,12 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Indexing Core
 Bundle-SymbolicName: com.dubture.indexing.core;singleton:=true
-Bundle-Version: 0.0.15.qualifier
+Bundle-Version: 0.0.16.qualifier
 Bundle-Activator: com.dubture.indexing.core.IndexingCorePlugin
 Bundle-Vendor: http://github.com/pulse00
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
- org.eclipse.ui,
  org.apache.lucene.core;bundle-version="[2.9.1, 3.0.0)",
  com.google.gson
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

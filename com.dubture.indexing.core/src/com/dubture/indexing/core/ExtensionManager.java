@@ -24,65 +24,60 @@ import com.dubture.indexing.core.index.IndexingVisitor;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-public class ExtensionManager
-{
-    private static ExtensionManager instance;
-    private List<BuildParticipant> participants;
-    
-    private ExtensionManager()
-    {
-        initBuildParticipants();
-    }
-    
-    private void initBuildParticipants()
-    {
-        participants = new ArrayList<BuildParticipant>();
-        IConfigurationElement[] config = Platform.getExtensionRegistry()
-                .getConfigurationElementsFor(BuildParticipant.BUILD_PARTICIPANT_ID);        
+public class ExtensionManager {
+	private static ExtensionManager instance;
+	private List<BuildParticipant> participants;
 
-        try {                           
-            
-            for (IConfigurationElement element : config) {
-            	
-                String nature = element.getAttribute("nature_id");
-                String extensions = element.getAttribute("file_extensions");
-                IndexingVisitor visitor = (IndexingVisitor) element.createExecutableExtension("visitor");
-                
-                if (nature != null) {
-                    
-                    boolean add = true;
-                    
-                    for (BuildParticipant existing : participants) {
-                        if (existing.getNature().equals(nature)) {
-                            add = false;
-                            break;
-                        }
-                    }
-                    
-                    if (add == false) {
-                        continue;
-                    }
-                        
-                    BuildParticipant participant = new BuildParticipant(nature, extensions, visitor);
-                    participants.add(participant);
-                }
-            }
-        } catch (Exception e1) {
-            IndexingCorePlugin.logException(e1);
-        }
-    }
-    
-    public static ExtensionManager getInstance()
-    {
-        if (instance == null) {
-            instance = new ExtensionManager();
-        }
-        
-        return instance;
-    }
+	private ExtensionManager() {
+		initBuildParticipants();
+	}
 
-    public List<BuildParticipant> getBuildParticipants()
-    {
-        return participants;
-    }
+	private void initBuildParticipants() {
+		participants = new ArrayList<BuildParticipant>();
+		IConfigurationElement[] config = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(BuildParticipant.BUILD_PARTICIPANT_ID);
+
+		try {
+
+			for (IConfigurationElement element : config) {
+
+				String nature = element.getAttribute("nature_id");
+				String extensions = element.getAttribute("file_extensions");
+				IndexingVisitor visitor = (IndexingVisitor) element.createExecutableExtension("visitor");
+
+				if (nature != null) {
+
+					boolean add = true;
+
+					for (BuildParticipant existing : participants) {
+						if (existing.getNature().equals(nature)) {
+							add = false;
+							break;
+						}
+					}
+
+					if (add == false) {
+						continue;
+					}
+
+					BuildParticipant participant = new BuildParticipant(nature, extensions, visitor);
+					participants.add(participant);
+				}
+			}
+		} catch (Exception e1) {
+			IndexingCorePlugin.logException(e1);
+		}
+	}
+
+	public static ExtensionManager getInstance() {
+		if (instance == null) {
+			instance = new ExtensionManager();
+		}
+
+		return instance;
+	}
+
+	public List<BuildParticipant> getBuildParticipants() {
+		return participants;
+	}
 }

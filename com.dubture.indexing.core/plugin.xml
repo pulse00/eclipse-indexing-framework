@@ -11,10 +11,4 @@
                class="com.dubture.indexing.core.build.IndexingBuilder">
          </run></builder>
    </extension>
-   <extension
-         point="org.eclipse.ui.startup">
-      <startup
-            class="com.dubture.indexing.core.IndexingStartup"></startup>
-   </extension>
-
 </plugin>

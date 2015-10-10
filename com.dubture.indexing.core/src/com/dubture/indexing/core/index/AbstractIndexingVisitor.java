@@ -16,30 +16,26 @@ import org.eclipse.core.resources.IResource;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-public abstract class AbstractIndexingVisitor implements IndexingVisitor
-{
-    protected IIndexingRequestor requestor;
-    protected IResource resource;
-    
-    @Override
-    abstract public void visit(Object file);
-    
-    @Override
-    public IndexingVisitor setRequestor(IIndexingRequestor requestor)
-    {
-        this.requestor = requestor;
-        return this;
-    }
+public abstract class AbstractIndexingVisitor implements IndexingVisitor {
+	protected IIndexingRequestor requestor;
+	protected IResource resource;
 
-    @Override
-    public IResource getResource()
-    {
-        return resource;
-    }
-    
-    public IndexingVisitor setResource(IResource resource)
-    {
-        this.resource = resource;
-        return this;
-    }
+	@Override
+	abstract public void visit(Object file);
+
+	@Override
+	public IndexingVisitor setRequestor(IIndexingRequestor requestor) {
+		this.requestor = requestor;
+		return this;
+	}
+
+	@Override
+	public IResource getResource() {
+		return resource;
+	}
+
+	public IndexingVisitor setResource(IResource resource) {
+		this.resource = resource;
+		return this;
+	}
 }

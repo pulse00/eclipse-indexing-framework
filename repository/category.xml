@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.dubture.indexing.feature_0.0.15.qualifier.jar" id="com.dubture.indexing.feature" version="0.0.15.qualifier">
+   <feature url="features/com.dubture.indexing.feature_0.0.16.qualifier.jar" id="com.dubture.indexing.feature" version="0.0.16.qualifier">
       <category name="com.dubture.indexing"/>
    </feature>
    <category-def name="com.dubture.indexing" label="Indexing Framework"/>
