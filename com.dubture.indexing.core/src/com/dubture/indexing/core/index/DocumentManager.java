@@ -10,6 +10,7 @@ package com.dubture.indexing.core.index;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,9 +20,11 @@ import java.util.Map;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriter.MaxFieldLength;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -62,13 +65,14 @@ public class DocumentManager
     
     protected void init() throws Exception {
     	
-    	StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_29);
-    	MaxFieldLength length = new MaxFieldLength(255);
+    	StandardAnalyzer analyzer = new StandardAnalyzer();
     	
     	index = getIndex();
-    	writer = new IndexWriter(index, analyzer, length);
+    	IndexWriterConfig config = new IndexWriterConfig(analyzer);
+    	writer = new IndexWriter(index, config);
     	writer.commit();
-    	reader = IndexReader.open(index, true);
+    	
+    	reader = DirectoryReader.open(writer);
     	searcher = new IndexSearcher(reader);        
     	pendingReferences = new HashMap<IFile, List<ReferenceInfo>>();
     	
@@ -91,9 +95,10 @@ public class DocumentManager
             
         if (indexFile.exists() == false && indexFile.mkdirs() == false) {
             throw new IOException("Unable to create lucene index directory " + indexFile.toString());
-        }        
+        }       
         
-        return index = FSDirectory.open(indexFile);
+        
+        return index = FSDirectory.open(Paths.get(indexFile.getPath()));
     }
     
     public static DocumentManager getInstance() throws Exception
@@ -118,18 +123,7 @@ public class DocumentManager
     
     protected void updateReader()
     {
-    	try {
-            IndexReader newReader = reader.reopen();
-            
-            if (newReader != reader) {
-                reader.close();
-                reader = newReader;
-                searcher = new IndexSearcher(reader);
-                IndexingCorePlugin.debug("Updated reader");
-            }
-        } catch (Exception e) {
-            IndexingCorePlugin.logException(e);
-        }
+    	// XXX : reimplement or remove
     }
     
     public void addReference(IFile file, ReferenceInfo reference) throws Exception
@@ -181,12 +175,12 @@ public class DocumentManager
         String path = file.getFullPath().toString();
         
         IndexingCorePlugin.debug("indexing document with path " + path);
-        doc.add(new Field(IndexField.PATH, path, Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new Field(IndexField.FILENAME, file.getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new StringField(IndexField.PATH, path, Field.Store.YES));
+        doc.add(new StringField(IndexField.FILENAME, file.getName(), Field.Store.YES));
         
-        doc.add(new Field(IndexField.TYPE, ref.getType(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new Field(IndexField.REFERENCENAME, ref.name, Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new Field(IndexField.METADATA, ref.getMetadata(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new StringField(IndexField.TYPE, ref.getType(), Field.Store.YES));
+        doc.add(new StringField(IndexField.REFERENCENAME, ref.name, Field.Store.YES));
+        doc.add(new StringField(IndexField.METADATA, ref.getMetadata(), Field.Store.YES));
         
         IndexingCorePlugin.debug("Indexing reference " + doc.toString());            
         writer.addDocument(doc);
@@ -196,7 +190,7 @@ public class DocumentManager
     {
         //TODO: howto handle this?
         int hitsPerPage = 100;
-        TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage, true);
+        TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage);
         
         try {
             searcher.search(pathQuery, collector);

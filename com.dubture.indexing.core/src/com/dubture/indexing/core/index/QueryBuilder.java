@@ -26,62 +26,46 @@ import com.dubture.indexing.core.IndexingCorePlugin;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-public class QueryBuilder
-{
-    public static Query createFileQuery(IFile file, String referenceId)
-    {
-        String filename = file.getName();
-        IPath path = file.getFullPath();
-        
-        IndexingCorePlugin.debug("Getting fileQuery for " + file.getName());
-        
-        PrefixQuery query = new PrefixQuery(new Term(IndexField.PATH, path.toString()));
-        TermQuery nameQuery = new TermQuery(new Term(IndexField.FILENAME, filename));
-        TermQuery refQuery = new TermQuery(new Term(IndexField.TYPE, referenceId));        
-        
-        BooleanQuery boolQuery = new BooleanQuery();
-        boolQuery.add(query, BooleanClause.Occur.MUST);
-        boolQuery.add(nameQuery, BooleanClause.Occur.MUST);
-        boolQuery.add(refQuery, BooleanClause.Occur.MUST);
-        
-        IndexingCorePlugin.debug("query: " + boolQuery.toString());
-        return boolQuery;
-    }
-    
-    public static Query createPathQuery(IPath path, String referenceId)
-    {
-        IndexingCorePlugin.debug("Getting pathquery for " + path.toString());
-        
-        PrefixQuery query = new PrefixQuery(new Term(IndexField.PATH, path.toString()));
-        TermQuery refQuery = new TermQuery(new Term(IndexField.TYPE, referenceId));
-        
-        BooleanQuery boolQuery = new BooleanQuery();
-        boolQuery.add(query, BooleanClause.Occur.MUST);
-        boolQuery.add(refQuery, BooleanClause.Occur.MUST);
-        
-        IndexingCorePlugin.debug("query: " + boolQuery.toString());
-        return boolQuery;
-    }
+public class QueryBuilder {
+	public static Query createFileQuery(IFile file, String referenceId) {
+		String filename = file.getName();
+		IPath path = file.getFullPath();
 
-    public static Query createDeleteReferencesQuery(IFile file, String type)
-    {
-        BooleanQuery boolQuery = new BooleanQuery();
-        String path = file.getFullPath().toString();
-        
-        boolQuery.add(new TermQuery(new Term(IndexField.PATH, path)), 
-                BooleanClause.Occur.MUST
-        );
-        
-        boolQuery.add(new TermQuery( new Term(IndexField.FILENAME, file.getName())),
-                BooleanClause.Occur.MUST
-        );
-        
-        boolQuery.add(new TermQuery(new Term(IndexField.TYPE, type)), 
-                BooleanClause.Occur.MUST
-        );
-        
-        IndexingCorePlugin.debug("Creating deleteByReference query: " + boolQuery.toString());
-        
-        return boolQuery;
-    }
+		IndexingCorePlugin.debug("Getting fileQuery for " + file.getName());
+
+		PrefixQuery query = new PrefixQuery(new Term(IndexField.PATH, path.toString()));
+		TermQuery nameQuery = new TermQuery(new Term(IndexField.FILENAME, filename));
+		TermQuery refQuery = new TermQuery(new Term(IndexField.TYPE, referenceId));
+
+		BooleanQuery boolQuery = (new BooleanQuery.Builder()).add(query, BooleanClause.Occur.MUST)
+				.add(nameQuery, BooleanClause.Occur.MUST).add(refQuery, BooleanClause.Occur.MUST).build();
+
+		IndexingCorePlugin.debug("query: " + boolQuery.toString());
+		return boolQuery;
+	}
+
+	public static Query createPathQuery(IPath path, String referenceId) {
+		IndexingCorePlugin.debug("Getting pathquery for " + path.toString());
+
+		PrefixQuery query = new PrefixQuery(new Term(IndexField.PATH, path.toString()));
+		TermQuery refQuery = new TermQuery(new Term(IndexField.TYPE, referenceId));
+
+		BooleanQuery boolQuery = new BooleanQuery.Builder().add(query, BooleanClause.Occur.MUST)
+				.add(refQuery, BooleanClause.Occur.MUST).build();
+
+		IndexingCorePlugin.debug("query: " + boolQuery.toString());
+		return boolQuery;
+	}
+
+	public static Query createDeleteReferencesQuery(IFile file, String type) {
+		String path = file.getFullPath().toString();
+		BooleanQuery boolQuery = new BooleanQuery.Builder()
+				.add(new TermQuery(new Term(IndexField.PATH, path)), BooleanClause.Occur.MUST)
+				.add(new TermQuery(new Term(IndexField.FILENAME, file.getName())), BooleanClause.Occur.MUST)
+				.add(new TermQuery(new Term(IndexField.TYPE, type)), BooleanClause.Occur.MUST).build();
+
+		IndexingCorePlugin.debug("Creating deleteByReference query: " + boolQuery.toString());
+
+		return boolQuery;
+	}
 }
