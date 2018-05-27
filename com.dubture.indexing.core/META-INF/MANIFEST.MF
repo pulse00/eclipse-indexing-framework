@@ -16,3 +16,4 @@ Export-Package: com.dubture.indexing.core,
  com.dubture.indexing.core.index,
  com.dubture.indexing.core.search,
  com.dubture.indexing.core.xml
+Automatic-Module-Name: com.dubture.indexing.core

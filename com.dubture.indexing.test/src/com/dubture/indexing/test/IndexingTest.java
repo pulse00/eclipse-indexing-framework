@@ -34,7 +34,7 @@ public class IndexingTest extends TestCase
            
             DocumentManager manager = TestDocumentManager.getInstance();
             manager.resetIndex();
-            assertEquals(0, manager.getReader().numDocs());
+            assertEquals(0, manager.getSearcher().getIndexReader().numDocs());
             
             ReferenceInfo reference = new ReferenceInfo("foobar", "session");
             
@@ -42,7 +42,7 @@ public class IndexingTest extends TestCase
             manager.flush();
             
             manager.deleteReferences(file, "foobar");
-            assertEquals(0, manager.getReader().numDocs());
+            assertEquals(0, manager.getSearcher().getIndexReader().numDocs());
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,7 +61,7 @@ public class IndexingTest extends TestCase
             DocumentManager manager = TestDocumentManager.getInstance();
             manager.resetIndex();
             SearchEngine searchEngine = SearchEngine.getInstance();
-            assertEquals(0, manager.getReader().numDocs());
+            assertEquals(0, manager.getSearcher().getIndexReader().numDocs());
             
             ReferenceInfo reference = new ReferenceInfo("foobar", "session");
             
@@ -88,7 +88,7 @@ public class IndexingTest extends TestCase
             DocumentManager manager = TestDocumentManager.getInstance();
             manager.resetIndex();
             SearchEngine searchEngine = SearchEngine.getInstance();
-            assertEquals(0, manager.getReader().numDocs());
+            assertEquals(0, manager.getSearcher().getIndexReader().numDocs());
             
             manager.addReference(file, new ReferenceInfo("foobar", "session2"));
             manager.addReference(file, new ReferenceInfo("manamana", "session"));

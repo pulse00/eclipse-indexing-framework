@@ -28,12 +28,6 @@
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/${eclipse.name}</url>
 		</repository>
-		<repository>
-			<id>eclipse-orbit</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20150821153341/repository/</url>
-		</repository>
-
 	</repositories>
 
 	<build>

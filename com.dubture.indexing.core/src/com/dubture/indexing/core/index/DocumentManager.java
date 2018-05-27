@@ -28,6 +28,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -36,6 +37,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 
 import com.dubture.indexing.core.IndexingCorePlugin;
+import com.dubture.indexing.core.log.Logger;
 
 /**
  * 
@@ -50,13 +52,12 @@ public class DocumentManager
     
     protected IndexWriter writer;
     
-    protected IndexReader reader;
     
     protected Map<IFile, List<ReferenceInfo> > pendingReferences;
     
     protected Directory index;
     
-    protected IndexSearcher searcher;
+    protected SearcherManager manager;
     
     protected DocumentManager() throws Exception
     {
@@ -72,8 +73,10 @@ public class DocumentManager
     	writer = new IndexWriter(index, config);
     	writer.commit();
     	
-    	reader = DirectoryReader.open(writer);
-    	searcher = new IndexSearcher(reader);        
+    	manager = new SearcherManager(writer, true, true, null);
+    	
+    	//reader = DirectoryReader.open(writer);
+    	//searcher = new IndexSearcher(reader);        
     	pendingReferences = new HashMap<IFile, List<ReferenceInfo>>();
     	
     }
@@ -123,7 +126,11 @@ public class DocumentManager
     
     protected void updateReader()
     {
-    	// XXX : reimplement or remove
+    	try {
+			manager.maybeRefreshBlocking();
+		} catch (IOException e) {
+			Logger.logException(e);
+		}
     }
     
     public void addReference(IFile file, ReferenceInfo reference) throws Exception
@@ -193,6 +200,7 @@ public class DocumentManager
         TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage);
         
         try {
+        	IndexSearcher searcher = manager.acquire();
             searcher.search(pathQuery, collector);
             ScoreDoc[] hits = collector.topDocs().scoreDocs;
             
@@ -214,9 +222,9 @@ public class DocumentManager
         }
     }
 
-    public IndexReader getReader()
+    public IndexSearcher getSearcher() throws IOException
     {
-        return reader;
+    	return manager.acquire();
     }
     
     public IndexWriter getWriter()
