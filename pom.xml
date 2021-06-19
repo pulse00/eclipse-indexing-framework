@@ -16,22 +16,18 @@
 	<properties>
 		<tycho-version>2.3.0</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<release>false</release>
-		<bintray.repo>indexing-framework</bintray.repo>
-		<bintray.version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</bintray.version>
-
 		<enforcer.requireMavenVersion>[3.8.1,4.0.0)</enforcer.requireMavenVersion>
 	</properties>
 
 	<repositories>
 		<repository>
 			<id>eclipse.org-2021-06</id>
-			<url>http://download.eclipse.org/releases/2021-06</url>
+			<url>https://download.eclipse.org/releases/2021-06</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
 			<id>eclipse.org-updates-4.20</id>
-			<url>http://download.eclipse.org/eclipse/updates/4.20</url>
+			<url>https://download.eclipse.org/eclipse/updates/4.20</url>
 			<layout>p2</layout>
 		</repository>
 	</repositories>
@@ -152,18 +148,6 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>parse-version</id>
-						<goals>
-							<goal>parse-version</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
 				<executions>
@@ -185,32 +169,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>release</id>
-			<activation>
-				<property>
-					<name>release</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<properties>
-				<bintray.package>release</bintray.package>
-			</properties>
-		</profile>
-		<profile>
-			<id>nightly</id>
-			<activation>
-				<property>
-					<name>release</name>
-					<value>false</value>
-				</property>
-			</activation>
-			<properties>
-				<bintray.package>nightly</bintray.package>
-			</properties>
-		</profile>
-	</profiles>
-
 </project>
