@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Update P2 Repository
 on:
   workflow_dispatch:
 jobs:
