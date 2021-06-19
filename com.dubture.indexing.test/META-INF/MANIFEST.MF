@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Indexing Test
 Bundle-SymbolicName: com.dubture.indexing.test
-Bundle-Version: 0.0.17.qualifier
+Bundle-Version: 0.0.18.qualifier
 Bundle-Vendor: http://github.com/pulse00
 Fragment-Host: com.dubture.indexing.core;bundle-version="0.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.junit;bundle-version="4.11.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.junit
