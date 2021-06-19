@@ -4,7 +4,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -15,8 +14,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Publish generated content to GitHub Pages
-      uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
+      uses: JamesIves/github-pages-deploy-action@4.1.4
       with:
-        dir: repository/target/repository
         branch: gh-pages
-        token: ${{ secrets.ACCESS_TOKEN }}
+        folder: repository/target/repository
