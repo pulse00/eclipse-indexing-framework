@@ -3,10 +3,10 @@
 <repository name="Indexign Plugin - latest"
     type="org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository" version="1.0.0">
   <properties size="1">
-    <property name="p2.timestamp" value="1243822502442"/>
+    <property name="p2.timestamp" value="16397595170000"/>
   </properties>
   <children size="1">
-    <child location="http://dl.bintray.com/zulus/indexing-framework/release/0.0.15/"/>
+    <child location="https://pdt.w3des.net/indexing-framework/release/0.0.17/"/>
   </children>
 </repository>
 
