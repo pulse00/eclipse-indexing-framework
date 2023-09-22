@@ -8,8 +8,8 @@
  ******************************************************************************/
 package com.dubture.indexing.test;
 
+import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
 
 import com.dubture.indexing.core.index.DocumentManager;
 
@@ -40,7 +40,7 @@ public class TestDocumentManager extends DocumentManager
             return index;
         }
         
-        return index = new RAMDirectory(); 
+        return index = new ByteBuffersDirectory(); 
     }
     
     public static DocumentManager getInstance() throws Exception

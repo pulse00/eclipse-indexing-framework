@@ -6,11 +6,12 @@
 	<parent>
 		<groupId>com.dubture.indexing</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.0.17-SNAPSHOT</version>
+		<version>0.0.18-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>com.dubture.indexing.core</artifactId>
-	<packaging>eclipse-plugin</packaging>
+	<packaging>eclipse-plugin</packaging> 
 
 </project>
+  

@@ -197,7 +197,7 @@ public class DocumentManager
     {
         //TODO: howto handle this?
         int hitsPerPage = 100;
-        TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage);
+        TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage, hitsPerPage*10);
         
         try {
         	IndexSearcher searcher = manager.acquire();
